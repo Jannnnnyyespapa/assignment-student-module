@@ -18,5 +18,11 @@ export class StudentsService {
     return await this.studentRepository.save(student);
   }
 
+  // Branch: read-students
+  async getAllStudents(): Promise<Student[]> {
+    return await this.studentRepository.find();
+  }
+
+
   
 } 
