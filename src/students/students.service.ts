@@ -12,5 +12,16 @@ export class StudentsService {
     private studentRepository: Repository<Student>,
   ) {}
 
- 
+  // Branch: create-students
+  async createStudent(createStudentDto: CreateStudentDto): Promise<Student> {
+    const student = this.studentRepository.create(createStudentDto);
+    return await this.studentRepository.save(student);
+  }
+
+  // Branch: read-students
+  async getAllStudents(): Promise<Student[]> {
+    return await this.studentRepository.find();
+  }
+
+  
 } 
