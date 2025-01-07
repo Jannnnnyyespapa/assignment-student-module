@@ -159,6 +159,17 @@ export class StudentsController {
                   }, 3000);
               }
 
+  // Branch: create-students
+  @Post()
+  async createStudent(@Body() createStudentDto: CreateStudentDto) {
+    const student = await this.studentsService.createStudent(createStudentDto);
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'Student created successfully',
+      data: student,
+    };
+  }
+
               function createStudent(event) {
                   event.preventDefault();
                   
@@ -404,4 +415,5 @@ export class StudentsController {
     `;
     res.send(html);
   }
+
 } 
