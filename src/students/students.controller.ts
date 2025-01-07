@@ -158,7 +158,7 @@ export class StudentsController {
                       });
                   }, 3000);
               }
-=======
+
   // Branch: create-students
   @Post()
   async createStudent(@Body() createStudentDto: CreateStudentDto) {
@@ -281,5 +281,139 @@ export class StudentsController {
     };
   }
 
- 
+  // Branch: update-students
+  @Put(':id')
+  async updateStudent(
+    @Param('id') id: number,
+    @Body() updateStudentDto: UpdateStudentDto,
+  ) {
+    const student = await this.studentsService.updateStudent(id, updateStudentDto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Student updated successfully',
+      data: student,
+    };
+  }
+
+  // Branch: delete-students
+  @Delete(':id')
+  async deleteStudent(@Param('id') id: number) {
+    await this.studentsService.deleteStudent(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Student deleted successfully',
+    };
+  }
+
+  @Get('edit/:id')
+  async editStudentForm(@Param('id') id: number, @Res() res: Response) {
+    const student = await this.studentsService.getStudentById(id);
+    res.setHeader('Content-Type', 'text/html');
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Edit Student</title>
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+         
+          <script>
+              function showNotification(message, type = 'success') {
+                  const notification = document.createElement('div');
+                  notification.className = 'notification ' + (type === 'error' ? 'error' : '');
+                  notification.innerHTML = \`
+                      <i class="fas \${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                      \${message}
+                  \`;
+                  document.body.appendChild(notification);
+                  
+                  setTimeout(() => {
+                      notification.addEventListener('animationend', function(e) {
+                          if (e.animationName === 'fadeOut') {
+                              notification.remove();
+                          }
+                      });
+                  }, 3000);
+              }
+
+              function updateStudent(id) {
+                  const formData = {
+                      firstName: document.getElementById('firstName').value,
+                      lastName: document.getElementById('lastName').value,
+                      email: document.getElementById('email').value,
+                      enrollmentDate: document.getElementById('enrollmentDate').value
+                  };
+
+                  fetch('/students/' + id, {
+                      method: 'PUT',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(formData)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      showNotification('Student updated successfully!');
+                      setTimeout(() => {
+                          window.location.href = '/students/view';
+                      }, 2000);
+                  })
+                  .catch(error => {
+                      showNotification('Error updating student', 'error');
+                      console.error('Error:', error);
+                  });
+
+                  return false;
+              }
+          </script>
+      </head>
+      <body>
+          <div class="container">
+              <h1><i class="fas fa-user-edit"></i> Edit Student</h1>
+              <form onsubmit="return updateStudent(${student.id})">
+                  <div class="form-group">
+                      <label for="firstName">First Name</label>
+                      <div class="input-icon">
+                          <i class="fas fa-user"></i>
+                          <input type="text" id="firstName" name="firstName" value="${student.firstName}" required>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="lastName">Last Name</label>
+                      <div class="input-icon">
+                          <i class="fas fa-user"></i>
+                          <input type="text" id="lastName" name="lastName" value="${student.lastName}" required>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <div class="input-icon">
+                          <i class="fas fa-envelope"></i>
+                          <input type="email" id="email" name="email" value="${student.email}" required>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="enrollmentDate">Enrollment Date</label>
+                      <div class="input-icon">
+                          <i class="fas fa-calendar"></i>
+                          <input type="date" id="enrollmentDate" name="enrollmentDate" 
+                                 value="${new Date(student.enrollmentDate).toISOString().split('T')[0]}" required>
+                      </div>
+                  </div>
+                  <div class="button-group">
+                      <a href="/students/view" class="back-button">
+                          <i class="fas fa-arrow-left"></i> Back
+                      </a>
+                      <button type="submit">
+                          <i class="fas fa-save"></i> Update Student
+                      </button>
+                  </div>
+              </form>
+          </div>
+      </body>
+      </html>
+    `;
+    res.send(html);
+  }
+
 } 
