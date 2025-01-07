@@ -1,0 +1,119 @@
+Student Module API Testing Guide with Postman
+
+Base URL: http://localhost:3000
+
+1. CREATE STUDENT (Branch: create-students)
+-----------------------------------------
+Method: POST
+URL: http://localhost:3000/students
+Headers: 
+  Content-Type: application/json
+Body (raw JSON):
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "enrollmentDate": "2024-03-01"
+}
+
+Expected Response:
+{
+    "statusCode": 201,
+    "message": "Student created successfully",
+    "data": {
+        "id": 1,
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "enrollmentDate": "2024-03-01",
+        "createdAt": "2024-03-01T...",
+        "updatedAt": "2024-03-01T..."
+    }
+}
+
+2. READ STUDENTS (Branch: read-students)
+--------------------------------------
+Get All Students:
+Method: GET
+URL: http://localhost:3000/students
+
+Expected Response:
+{
+    "statusCode": 200,
+    "data": [
+        {
+            "id": 1,
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "enrollmentDate": "2024-03-01",
+            "createdAt": "2024-03-01T...",
+            "updatedAt": "2024-03-01T..."
+        }
+    ]
+}
+
+Get Single Student:
+Method: GET
+URL: http://localhost:3000/students/1 (replace 1 with actual student ID)
+
+Expected Response:
+{
+    "statusCode": 200,
+    "data": {
+        "id": 1,
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "enrollmentDate": "2024-03-01",
+        "createdAt": "2024-03-01T...",
+        "updatedAt": "2024-03-01T..."
+    }
+}
+
+3. UPDATE STUDENT (Branch: update-students)
+-----------------------------------------
+Method: PUT
+URL: http://localhost:3000/students/1 (replace 1 with actual student ID)
+Headers: 
+  Content-Type: application/json
+Body (raw JSON):
+{
+    "firstName": "John Updated",
+    "lastName": "Doe Updated",
+    "email": "john.updated@example.com",
+    "enrollmentDate": "2024-03-02"
+}
+
+Expected Response:
+{
+    "statusCode": 200,
+    "message": "Student updated successfully",
+    "data": {
+        "id": 1,
+        "firstName": "John Updated",
+        "lastName": "Doe Updated",
+        "email": "john.updated@example.com",
+        "enrollmentDate": "2024-03-02",
+        "createdAt": "2024-03-01T...",
+        "updatedAt": "2024-03-02T..."
+    }
+}
+
+4. DELETE STUDENT (Branch: delete-students)
+-----------------------------------------
+Method: DELETE
+URL: http://localhost:3000/students/1 (replace 1 with actual student ID)
+
+Expected Response:
+{
+    "statusCode": 200,
+    "message": "Student deleted successfully"
+}
+
+Notes:
+- Make sure the MySQL server is running
+- Ensure the application is running (npm run start:dev)
+- Replace dates and IDs with actual values
+- All timestamps will be in ISO format
+- For update operations, you can send partial data (only fields to be updated) 
