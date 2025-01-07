@@ -23,6 +23,24 @@ export class StudentsService {
     return await this.studentRepository.find();
   }
 
+  async getStudentById(id: number): Promise<Student> {
+    const student = await this.studentRepository.findOne({ where: { id } });
+    if (!student) {
+      throw new NotFoundException(`Student with ID ${id} not found`);
+    }
+    return student;
+  }
+
+  // Branch: update-students
+  async updateStudent(
+    id: number,
+    updateStudentDto: UpdateStudentDto,
+  ): Promise<Student> {
+    const student = await this.getStudentById(id);
+    Object.assign(student, updateStudentDto);
+    return await this.studentRepository.save(student);
+  }
+=======
 
   
 } 
